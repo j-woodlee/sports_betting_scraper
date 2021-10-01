@@ -1,6 +1,3 @@
-import apikeys
-import requests
-import json
 import test_api
 import parse_data
 
