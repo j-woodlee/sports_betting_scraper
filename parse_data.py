@@ -33,22 +33,25 @@ def parse_data(events):
             implied_prob1 = 1 / team1highest['price']
             implied_prob2 = 1 / team2highest['price']
             print("Sport Key: " + event["sport_key"])
-            print ("Highest for " + team1highest['name'] + " is " + str(team1highest['price']) + " at")
+            print ("Highest for team 1 " + team1highest['name'] + " is " + str(team1highest['price']) + " or " + str(implied_prob1) + " at")
             print (team1highest['bookmakers'])
 
-            print ("Highest for " + team2highest['name'] + " is " + str(team2highest['price']) + " at")
+            print ("Highest for team 2 " + team2highest['name'] + " is " + str(team2highest['price']) + " or " + str(implied_prob2) + " at")
             print(team2highest['bookmakers'])
-            # get_bet(implied_prob1, implied_prob2)
+            get_bet(implied_prob1, implied_prob2)
             print 
 
 
 def get_bet(prob1, prob2):
     wiggle_room = 1 - (prob1 + prob2)
-    prob1 += wiggle_room / 2
-    prob2 += wiggle_room / 2
+    prob1 += (wiggle_room * prob1) / (prob1 + prob2)
+    prob2 += (wiggle_room * prob2) / (prob1 + prob2)
+
+    # print prob1 + prob2
 
     # print("bet on away team" : prob1)
-    print prob2
+    print ("bet team 1 " + str(100 * prob1))
+    print ("bet team 2 "  + str(100 * prob2))
 
 
 def get_implied_probability_sum(highest1, highest2):
