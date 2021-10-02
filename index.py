@@ -26,7 +26,7 @@ DATE_FORMAT = 'iso' # iso | unix
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-odds_response = requests.get("https://api.the-odds-api.com/v4/sports/soccer_epl/odds", params={
+odds_response = requests.get("https://api.the-odds-api.com/v4/sports/soccer_france_ligue_one/odds", params={
     'api_key': API_KEY,
     'regions': REGIONS,
     'markets': MARKETS,
@@ -35,13 +35,13 @@ odds_response = requests.get("https://api.the-odds-api.com/v4/sports/soccer_epl/
 })
 
 if odds_response.status_code != 200:
-    print("Failed to get odds: status_code {odds_response.status_code}, response body {odds_response.text}")
+    print("Failed to get odds: status_code " + str(odds_response.status_code) + " response body " + str(odds_response.text))
 
 else:
     odds_json = odds_response.json()
     print('Number of events:', len(odds_json))
     parse_data.parse_data(odds_json)
-    print(odds_json)
+    # print(odds_json)
 
     # Check the usage quota
     print('Remaining requests', odds_response.headers['x-requests-remaining'])

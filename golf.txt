@@ -1,0 +1,2 @@
+Failed to get odds: status_code422response body{"message":"Invalid parameter combination. The given markets cannot be used with this sport."}
+
