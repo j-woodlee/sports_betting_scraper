@@ -8,43 +8,42 @@ def parse_data(events):
         team3highest = {"price": 0, "name": "", "bookmakers": []}
 
         for bookmaker in event['bookmakers']:
+            if is_invalid_bookmaker(bookmaker['title']):
+                continue
             for market in bookmaker['markets']:
                 if market['key'] == 'h2h':
                     market_outcomes = market['outcomes']
                     priceteam1 = market_outcomes[0]['price']
                     priceteam2 = market_outcomes[1]['price']
                     
-                    if bookmaker['title'] != "BetRivers":
-                        if team1highest['price'] < priceteam1:
-                            team1highest['price'] = priceteam1
-                            team1highest['name'] = market_outcomes[0]['name']
-                            team1highest['bookmakers'] = [bookmaker['title']]
-                        elif team1highest['price'] == priceteam1:
-                            team1highest['bookmakers'].append(bookmaker['title'])
+                    if team1highest['price'] < priceteam1:
+                        team1highest['price'] = priceteam1
+                        team1highest['name'] = market_outcomes[0]['name']
+                        team1highest['bookmakers'] = [bookmaker['title']]
+                    elif team1highest['price'] == priceteam1:
+                        team1highest['bookmakers'].append(bookmaker['title'])
 
-                        if team2highest['price'] < priceteam2:
-                            team2highest['price'] = priceteam2
-                            team2highest['name'] = market_outcomes[1]['name']
-                            team2highest['bookmakers'] = [bookmaker['title']]
-                        elif team2highest['price'] == priceteam2:
-                            team2highest['bookmakers'].append(bookmaker['title'])
+                    if team2highest['price'] < priceteam2:
+                        team2highest['price'] = priceteam2
+                        team2highest['name'] = market_outcomes[1]['name']
+                        team2highest['bookmakers'] = [bookmaker['title']]
+                    elif team2highest['price'] == priceteam2:
+                        team2highest['bookmakers'].append(bookmaker['title'])
 
-                        # if there is a draw condition
-                        if len(market_outcomes) == 3:
-                            priceteam3 = market_outcomes[2]['price']
-                            if team3highest['price'] < priceteam3:
-                                team3highest['price'] = priceteam3
-                                team3highest['name'] = market_outcomes[2]['name']
-                                team3highest['bookmakers'] = [bookmaker['title']]
-                            elif team3highest['price'] == priceteam3:
-                                team3highest['bookmakers'].append(bookmaker['title'])
-                    else:
-                        continue
+                    # if there is a draw condition
+                    if len(market_outcomes) == 3:
+                        priceteam3 = market_outcomes[2]['price']
+                        if team3highest['price'] < priceteam3:
+                            team3highest['price'] = priceteam3
+                            team3highest['name'] = market_outcomes[2]['name']
+                            team3highest['bookmakers'] = [bookmaker['title']]
+                        elif team3highest['price'] == priceteam3:
+                            team3highest['bookmakers'].append(bookmaker['title'])
 
 
         implied_prob_sum = get_implied_probability_sum(team1highest['price'], team2highest['price'], team3highest['price'])
         print(implied_prob_sum)
-        if (implied_prob_sum < .995):
+        if (implied_prob_sum < 1):
 
             implied_prob1 = 1 / team1highest['price']
             implied_prob2 = 1 / team2highest['price']
@@ -92,6 +91,6 @@ def get_implied_probability_sum(highest1, highest2, highest3):
         implied_prob_sum += (1 / highest3)
     return implied_prob_sum
 
-# def not_banned_bookmaker(bookmaker):
-#     list_of_good_bookmakers = ["Bovada", "BetOnline.ag"]
-#     return list_of_good_bookmakers.count(bookmaker) > 0
+def is_invalid_bookmaker(bookmaker):
+    list_of_invalid_bookmakers = ["BetRivers", "SugarHouse", "DraftKings", "Barstool Sportsbook"]
+    return list_of_invalid_bookmakers.count(bookmaker) > 0
